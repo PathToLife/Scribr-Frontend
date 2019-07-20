@@ -3,6 +3,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField'
 import Search from '@material-ui/icons/Search'
 import * as React from 'react'
+import {SERVER_IP} from '../constants';
 
 interface IState {
     input: string,
@@ -30,7 +31,7 @@ export default class CaptionArea extends React.Component<IProps, IState>{
         if(this.state.input.trim() === ""){
             this.setState({result:[]},()=>this.makeTableBody())
         }else{
-            fetch("https://scriberapi.azurewebsites.net/api/Videos/SearchByTranscriptions/"+this.state.input, {
+            fetch(`${SERVER_IP}/api/Videos/SearchByTranscriptions/`+this.state.input, {
                 headers: {
                   Accept: "text/plain"
                 },
@@ -41,12 +42,12 @@ export default class CaptionArea extends React.Component<IProps, IState>{
                 this.setState({result:answer},()=>this.makeTableBody())
             })
         }
-    }
+    };
 
     public handleTableClick = (videoUrl:any, timedURL: string) => {
         window.scrollTo(0,0);
         this.props.play(videoUrl + "&t=" + timedURL + "s")
-    }
+    };
 
     public makeTableBody = () => {
         const toRet: any[] = [];
@@ -61,7 +62,7 @@ export default class CaptionArea extends React.Component<IProps, IState>{
             else{
                 return a.videoTitle.localeCompare(b.videoTitle);
             }
-        })
+        });
         this.state.result.forEach((video: any) => {
             video.transcription.forEach((caption: any) => {
                 toRet.push(
@@ -74,17 +75,17 @@ export default class CaptionArea extends React.Component<IProps, IState>{
         });
         if (toRet.length === 0) {
             if(this.state.input.trim() === ""){
-                const errorCase = <div><p>Sorry you need to still search</p></div>
+                const errorCase = <div><p>Sorry you need to still search</p></div>;
                 this.setState({body:errorCase})
             }else{
-                const errorCase = <div><p>Sorry no results were returned for "{this.state.input}"</p></div>
+                const errorCase = <div><p>Sorry no results were returned for "{this.state.input}"</p></div>;
                 this.setState({body:errorCase})
             }
         }
         else{
             this.setState({body:toRet})
         }
-    }
+    };
 
     public render() {
         return (

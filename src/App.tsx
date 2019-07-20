@@ -4,6 +4,7 @@ import CaptionArea from 'src/Components/CaptionArea';
 import Header from 'src/Components/Header';
 import VideoList from 'src/Components/VideoList';
 import 'src/App.css'
+import {SERVER_IP} from './constants';
 
 interface IState {
   updateVideoList: any,
@@ -27,11 +28,11 @@ class App extends React.Component<{}, IState>{
     this.setState({
       player: playerRef
     })
-  }
+  };
 
   public addVideo = (url: string) => {
-    const body = {"url": url}
-    fetch("https://scriberapi.azurewebsites.net/api/Videos", {
+    const body = {"url": url};
+    fetch(`${SERVER_IP}/api/Videos`, {
       body: JSON.stringify(body),
       headers: {
         Accept: "text/plain",
@@ -41,7 +42,7 @@ class App extends React.Component<{}, IState>{
     }).then(() => {
       this.state.updateVideoList();
     })
-  }
+  };
 
   public updateURL = (url: string) => {
     if(this.state.playingURL === url){
@@ -49,11 +50,11 @@ class App extends React.Component<{}, IState>{
     }else{
       this.setState({playingURL:url})
     }
-  }
+  };
 
   public listMounted = (callbacks: any) => {
     this.setState({ updateVideoList: callbacks })
-  }
+  };
 
   public render() {
     return (<div>
